@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NUSC Exam Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand"><div class="brand-mark"><img src="assets/images/nusc-logo.jpg" alt="National University of Sadat City logo"></div><div><b>NUSC</b><small>EXAM GENERATOR</small></div></div>
+      <div class="side-label">WORKSPACE</div>
+      <button class="nav-item active" data-view="dashboard"><span>▦</span> Dashboard</button>
+      <button class="nav-item" data-view="create"><span>＋</span> Create exam</button>
+      <button class="nav-item" data-view="history"><span>◷</span> Exam history</button>
+      <div class="sidebar-bottom"><div class="secure-dot"></div><div><b>Teacher workspace</b><small>Local prototype</small></div></div>
+    </aside>
+    <main class="main">
+      <header class="topbar">
+        <button class="mobile-menu" id="mobileMenu">☰</button>
+        <div><span class="eyebrow">NUSC / ACADEMIC TOOLS</span><h1 id="pageTitle">Dashboard</h1></div>
+        <div class="top-actions"><span class="status-pill"><i></i> Workspace ready</span><div class="avatar">T</div></div>
+      </header>
+      <section class="view active" id="dashboardView">
+        <div class="welcome">
+          <div><span class="eyebrow light">EXAM MANAGEMENT</span><h2>Create multiple exam versions<br>in a few clicks.</h2><p>Upload, review, shuffle and export four equivalent exam models.</p><button class="btn btn-white" data-go="create">＋ Create new exam</button></div>
+          <div class="welcome-art"><div class="paper paper-back"></div><div class="paper paper-front"><div class="paper-line wide"></div><div class="paper-line"></div><div class="paper-choice"></div><div class="paper-choice"></div><div class="paper-choice short"></div><div class="paper-stamp">A</div></div><div class="spark">✦</div></div>
+        </div>
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-icon blue">▤</div><span>Exams created</span><strong id="statExams">0</strong><small>Saved in this browser</small></article>
+          <article class="stat-card"><div class="stat-icon green">▦</div><span>Models generated</span><strong id="statModels">0</strong><small>Four versions per exam</small></article>
+          <article class="stat-card"><div class="stat-icon amber">✓</div><span>Questions processed</span><strong id="statQuestions">0</strong><small>Across saved exams</small></article>
+        </div>
+        <div class="section-heading"><div><span class="eyebrow">YOUR WORK</span><h3>Recent exams</h3></div><button class="btn btn-outline" data-go="history">View all →</button></div>
+        <div class="exam-list" id="recentList"><div class="empty-state"><div class="empty-icon">▤</div><b>No exams yet</b><p>Your generated exams will appear here.</p><button class="btn btn-primary" data-go="create">Create your first exam</button></div></div>
+        <div class="notice"><span>ⓘ</span><p><b>Privacy note:</b> No login is required. This static version stores saved exams in the current browser only. Do not publish confidential exams or answer keys in the public GitHub repository.</p></div>
+      </section>
+
+      <section class="view" id="createView">
+        <div class="stepper"><div class="step current"><b>1</b><span>Upload</span></div><div class="step-line"></div><div class="step"><b>2</b><span>Review</span></div><div class="step-line"></div><div class="step"><b>3</b><span>Generate</span></div></div>
+        <div class="content-card metadata-card">
+          <div class="card-heading"><div><span class="eyebrow">EXAM DETAILS</span><h2>Exam information</h2><p>The university template stays fixed. Only these details change for each exam.</p></div><span class="file-badge">FIXED NUSC TEMPLATE</span></div>
+          <div class="metadata-grid">
+            <label>Course name *<input id="courseName" placeholder="e.g. Computer Networks" required></label>
+            <label>Course code<input id="courseCode" placeholder="e.g. IS209"></label>
+            <label>Program name<input id="programName" placeholder="e.g. General"></label>
+            <label>Semester<input id="semester" placeholder="e.g. Fall"></label>
+            <label>Level<input id="level" placeholder="e.g. Two"></label>
+            <label>Exam date<input id="examDate" type="text" placeholder="e.g. 9 / 11 / 2026"></label>
+            <label>Duration<input id="duration" placeholder="e.g. 1 Hour"></label>
+            <label>Academic year<input id="academicYear" placeholder="e.g. 2026 / 2027"></label>
+            <label>Instructor name<input id="instructor" placeholder="Doctor / Instructor name"></label>
+            <label>Total marks<input id="totalMarks" type="number" min="0" step="0.5" placeholder="e.g. 20"></label>
+          </div>
+        </div>
+        <div class="content-card">
+          <div class="card-heading"><div><span class="eyebrow">STEP 01</span><h2>Upload your original exam</h2><p>Enter exam details, upload questions and an optional answer key, then review before generating models.</p></div><div class="file-badge">PDF · DOCX · TXT</div></div>
+          <label class="upload-zone" id="dropZone"><input type="file" id="examFile" accept=".pdf,.docx,.txt"><div class="upload-symbol">⇧</div><b>Drag your exam file here</b><span>or <u>browse files</u> from your device</span><small>For best results, use the supported question format shown below.</small></label>
+          <div class="upload-feedback" id="fileFeedback"></div>
+          <div class="ai-status" id="aiStatus"><span class="ai-dot"></span><div><b>Hybrid extraction workflow</b><small>Text extraction + structured parsing. AI enhancement can be connected through the included secure Edge Function.</small></div></div>
+          <div class="answer-upload-block">
+            <div><b>Upload the original answer sheet (optional)</b><p>Upload a separate PDF, DOCX or TXT answer key. Detected answers are suggestions only and must be confirmed by the instructor.</p></div>
+            <label class="upload-zone answer-zone" id="answerDropZone"><input type="file" id="answerFile" accept=".pdf,.docx,.txt"><div class="upload-symbol">✓</div><b>Drop answer key here or browse</b><span>PDF · DOCX · TXT</span></label>
+            <div class="upload-feedback" id="answerFeedback"></div>
+          </div>
+          <div class="format-help"><b>Supported text format</b><button class="text-btn" id="downloadSample">Download sample .txt</button><pre>Q1. What does HTML stand for?
+A) Hyper Text Markup Language
+B) High Text Machine Language
+C) Home Tool Markup Language
+D) Hyperlinks Text Management Language
+Answer: A
+
+Q2. CSS is used for?
+A) Styling web pages
+B) Managing databases
+C) Writing server hardware
+D) Compiling Java
+Answer: A</pre><small>Supports numbered sections (Question 1, Question 2…), MCQ choices a)–d), True/False statements and written questions. Scanned PDFs require OCR. Always review extracted content before generating.</small></div>
+          <div class="manual-toggle"><span>Prefer to type questions yourself?</span><button class="text-btn" id="manualToggle">Add questions manually ↓</button></div>
+          <div class="manual-panel hidden" id="manualPanel">
+            <div class="field"><label for="manualText">Questions and answer key</label><textarea id="manualText" rows="10" placeholder="Q1. Question text&#10;A) Option one&#10;B) Option two&#10;C) Option three&#10;D) Option four&#10;Answer: B"></textarea></div>
+            <button class="btn btn-primary" id="parseManual">Parse questions</button>
+          </div>
+        </div>
+        <div class="content-card hidden" id="reviewCard">
+          <div class="card-heading"><div><span class="eyebrow">STEP 02</span><h2>Review extracted questions</h2><p>Review every extracted question, edit choices and manually confirm the correct answer. Imported answer-key entries are suggestions only.</p></div><span class="count-pill" id="questionCount">0 questions</span></div>
+          <div id="questionEditor"></div>
+          <div class="review-footer"><button class="btn btn-outline" id="addQuestion">＋ Add question</button><button class="btn btn-primary" id="generateBtn">Generate 4 models →</button></div>
+        </div>
+      </section>
+
+      <section class="view" id="resultsView">
+        <div class="result-banner"><div><span class="eyebrow light">GENERATION COMPLETE</span><h2>Your four exam models are ready.</h2><p>Each model has a separate answer key. Review before printing.</p></div><div class="result-check">✓</div></div>
+        <div class="result-toolbar"><div><h3 id="resultExamTitle">Generated exam</h3><p id="resultMeta">4 models · 0 questions</p></div><button class="btn btn-outline" id="saveExam">Save to history</button></div>
+        <div class="model-grid" id="modelGrid"></div>
+        <div class="content-card key-card"><div class="card-heading"><div><span class="eyebrow">ANSWER KEYS</span><h2>Answer keys by model</h2><p>Correct option positions after shuffling.</p></div><button class="btn btn-primary" id="downloadAll">Download all files</button></div><div id="answerKeys"></div></div>
+        <button class="btn btn-outline" data-go="create">＋ Create another exam</button>
+      </section>
+
+      <section class="view" id="historyView">
+        <div class="section-heading"><div><span class="eyebrow">ARCHIVE</span><h3>Exam history</h3><p class="muted">Previously generated exams on this device.</p></div><button class="btn btn-primary" data-go="create">＋ New exam</button></div>
+        <div class="exam-list" id="historyList"></div>
+      </section>
+      <footer>© 2026 NUSC Exam Generator <span>Built for academic use</span></footer>
+    </main>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body></html>

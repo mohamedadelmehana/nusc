@@ -1,0 +1,8 @@
+{
+  "name": "nusc-exam-generator-local-ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "NUSC Exam Generator with a local Node.js proxy for OpenRouter AI",
+  "scripts": { "start": "node --env-file=.env server.js" },
+  "engines": { "node": ">=20.6.0" }
+}

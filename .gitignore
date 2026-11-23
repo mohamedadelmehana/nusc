@@ -1,3 +1,19 @@
 .env
+.env.*
+!.env.example
 node_modules/
 .DS_Store
+
+# Build and test output
+dist/
+build/
+coverage/
+
+# Local/private runtime data
+uploads/
+tmp/
+temp/
+ocr/
+logs/
+*.log
+*.ocr.*

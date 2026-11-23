@@ -87,6 +87,10 @@ Answer: A</pre><small>Supports numbered sections (Question 1, Question 2…), MC
             <div class="field"><label for="manualText">Questions and answer key</label><textarea id="manualText" rows="10" placeholder="Q1. Question text&#10;A) Option one&#10;B) Option two&#10;C) Option three&#10;D) Option four&#10;Answer: B"></textarea></div>
             <button class="btn btn-primary" id="parseManual">Parse questions</button>
           </div>
+          <div class="manual-entry-callout">
+            <div><span class="eyebrow">TEACHER AUTHORED</span><b>Create a question one field at a time</b><small>Choose a type, add answers or grading notes, and keep it in the same review list as extracted questions.</small></div>
+            <button class="btn btn-primary" id="addQuestionManual" type="button">＋ Add Question Manually</button>
+          </div>
         </div>
         <div class="content-card hidden" id="reviewCard">
           <div class="card-heading"><div><span class="eyebrow">STEP 02</span><h2>Review extracted questions</h2><p>Review every extracted question, edit choices and manually confirm the correct answer. Imported answer-key entries are suggestions only.</p></div><span class="count-pill" id="questionCount">0 questions</span></div>
@@ -109,6 +113,19 @@ Answer: A</pre><small>Supports numbered sections (Question 1, Question 2…), MC
       </section>
       <footer>© 2026 NUSC Exam Generator <span>Built for academic use</span></footer>
     </main>
+  </div>
+  <div class="modal hidden" id="questionModal" role="dialog" aria-modal="true" aria-labelledby="questionModalTitle">
+    <div class="modal-backdrop" data-close-question-modal></div>
+    <div class="modal-card">
+      <div class="modal-heading"><div><span class="eyebrow">MANUAL QUESTION</span><h2 id="questionModalTitle">Add Question Manually</h2><p>All fields marked with * are required.</p></div><button class="modal-close" type="button" data-close-question-modal aria-label="Close">×</button></div>
+      <div class="manual-form">
+        <label>Question type *<select id="manualType"><option value="mcq">Multiple Choice (MCQ)</option><option value="tf">True / False</option><option value="written">Written / Essay</option><option value="problem">Problem / Calculation</option></select></label>
+        <label>Question text / statement *<textarea id="manualPrompt" rows="4" placeholder="Write the question, statement, equations, or numerical data here…"></textarea></label>
+        <div id="manualTypeFields"></div>
+        <label class="marks-field">Question marks *<input id="manualMarks" type="number" min="0.5" step="0.5" value="1"></label>
+      </div>
+      <div class="modal-footer"><button class="btn btn-outline" type="button" data-close-question-modal>Cancel</button><button class="btn btn-primary" type="button" id="saveManualQuestion">Save question</button></div>
+    </div>
   </div>
   <div class="toast" id="toast"></div>
   <script src="js/config.js"></script>
